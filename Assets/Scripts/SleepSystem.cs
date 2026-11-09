@@ -25,6 +25,7 @@ public class SleepSystem : MonoBehaviour
         player.rb.isKinematic = true;
         player.collider.enabled = false;
         Camera.main.transform.position = sleepCameraAt.position;
+        player.SetCameraRot(new Vector3(-4, -152, 0));
 
         isSleeping = true;
     }

@@ -10,11 +10,11 @@ public class GameManager : MonoBehaviour
     public GameObject Entity;
     public GameObject Player;
 
-    public GameObject GoToPos;
-    public GameObject GoToAway;
+    public GameObject EntityInRoomPos;
+    public GameObject EntityAwayPos;
 
-    public float TimeBeforeSpawn = 30f;
-    public float TimeBeforeLeave = 5f;
+    public float TimeBeforeEntitySpawns = 30f;
+    public float TimeBeforeEntityLeaves = 5f;
 
     private float initialTimeBeforeSpawn;
     private Coroutine checkRoutine;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         items = FindObjectsByType<Item>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        initialTimeBeforeSpawn = TimeBeforeSpawn;
+        initialTimeBeforeSpawn = TimeBeforeEntitySpawns;
     }
 
     void Start()
@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
         UpdateItemsForLevel();
         GetItemPositions();
 
-        if (GoToAway != null) EntityAtPosition(GoToAway.transform);
+        if (EntityAwayPos != null) SendEntityTo(EntityAwayPos.transform);
 
-        checkRoutine = StartCoroutine(CheckOnRoom(GoToPos, GoToAway));
+        checkRoutine = StartCoroutine(CheckOnRoom(EntityInRoomPos, EntityAwayPos));
     }
 
     void GetItemPositions()
@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
     public MessageManager messageManager;
     public string[] hints;
     private bool hintSentForLevel = false;
+
     public void EndingLevel()
     {
         CurrentLevel++;
@@ -95,16 +96,16 @@ public class GameManager : MonoBehaviour
 
         UpdateItemsForLevel();
 
-        TimeBeforeSpawn = initialTimeBeforeSpawn;
+        TimeBeforeEntitySpawns = initialTimeBeforeSpawn;
 
-        if (GoToAway != null) EntityAtPosition(GoToAway.transform);
+        if (EntityAwayPos != null) SendEntityTo(EntityAwayPos.transform);
         isThere = false;
 
         if (checkRoutine != null) StopCoroutine(checkRoutine);
-        checkRoutine = StartCoroutine(CheckOnRoom(GoToPos, GoToAway));
+        checkRoutine = StartCoroutine(CheckOnRoom(EntityInRoomPos, EntityAwayPos));
     }
 
-    public void EntityAtPosition(Transform Pos)
+    public void SendEntityTo(Transform Pos)
     {
         var tranpos = Pos.position;
         Entity.transform.position = new Vector3(tranpos.x, tranpos.y + 1, tranpos.z);
@@ -113,7 +114,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator CheckOnRoom(GameObject GoTo, GameObject GoToOff)
     {
-        float waitTime = TimeBeforeSpawn;
+        float waitTime = TimeBeforeEntitySpawns;
 
         for (int i = 0; i < 5; i++)
         {
@@ -129,12 +130,12 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(waitTime);
             }
 
-            EntityAtPosition(GoTo.transform);
+            SendEntityTo(GoTo.transform);
             isThere = true;
 
-            yield return new WaitForSeconds(TimeBeforeLeave);
+            yield return new WaitForSeconds(TimeBeforeEntityLeaves);
 
-            EntityAtPosition(GoToOff.transform);
+            SendEntityTo(GoToOff.transform);
             isThere = false;
 
             waitTime -= 5f;
@@ -146,8 +147,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public float giveHintAfter;
+    public float giveHintAfter; //In seconds; don't know a better name for this variable without the name being long.
     public SleepSystem sleepSystem;
+
     void Update()
     {
         LevelTime += Time.deltaTime;

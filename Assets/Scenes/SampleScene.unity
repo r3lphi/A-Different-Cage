@@ -2414,6 +2414,7 @@ GameObject:
   - component: {fileID: 385493680}
   - component: {fileID: 385493682}
   - component: {fileID: 385493681}
+  - component: {fileID: 385493683}
   m_Layer: 5
   m_Name: Cursor
   m_TagString: Untagged
@@ -2475,6 +2476,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385493679}
   m_CullTransparentMesh: 1
+--- !u!114 &385493683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385493679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &480912143
 GameObject:
   m_ObjectHideFlags: 0
@@ -5261,7 +5277,8 @@ MonoBehaviour:
   collider: {fileID: 702914427}
   holdingHand: {fileID: 2145215945}
   interactColor: {r: 1, g: 0.4198113, b: 0.4198113, a: 1}
-  maxItemPickupDistance: 3
+  maxInteractDistance: 3
+  interactableCoveredByCursor: {fileID: 0}
   pillsTaken: 0
 --- !u!136 &702914427
 CapsuleCollider:
@@ -5270,7 +5287,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 702914423}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 93ac57b8e95176fabb8c7f70fc5eda69, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -10857,10 +10874,10 @@ MonoBehaviour:
   CurrentLevel: 0
   Entity: {fileID: 1464051298}
   Player: {fileID: 702914423}
-  GoToPos: {fileID: 1966548906}
-  GoToAway: {fileID: 1920843445}
-  TimeBeforeSpawn: 30
-  TimeBeforeLeave: 5
+  EntityInRoomPos: {fileID: 1966548906}
+  EntityAwayPos: {fileID: 1920843445}
+  TimeBeforeEntitySpawns: 30
+  TimeBeforeEntityLeaves: 5
   isThere: 0
   audioSource: {fileID: 854545985}
   footstepSound: {fileID: 8300000, guid: 0c3c90990d97711c48f989cacc74499e, type: 3}

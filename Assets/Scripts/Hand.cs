@@ -62,7 +62,9 @@ public class Hand : MonoBehaviour
         if (heldItem != null)
         {
             RaycastHit hit;
-            Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 5f, PlayerlessMask);
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 3f, PlayerlessMask) == null){
+                return;
+            }
             heldItem.transform.position = hit.point;
             heldItem.gameObject.SetActive(true);
 

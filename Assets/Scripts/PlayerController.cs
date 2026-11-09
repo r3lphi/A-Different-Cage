@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     }
 
     private Vector3 cameraRot;
+    public void SetCameraRot(Vector3 rot){
+        cameraRot = rot;
+    }
 
     void Update()
     {
@@ -30,6 +33,9 @@ public class PlayerController : MonoBehaviour
         cameraRot.x = Mathf.Clamp(cameraRot.x, -89, 89);
 
         camera.localEulerAngles = cameraRot;
+
+        //Interactable calls
+        CheckForInteractable();
 
     }
     void FixedUpdate()
@@ -55,12 +61,16 @@ public class PlayerController : MonoBehaviour
     public Hand holdingHand;
     public Color interactColor;
     // public LayerMask InteractableDetectionMask;
-    public float maxItemPickupDistance;
+    public float maxInteractDistance;
     private Item itemInView;
+    [SerializeField]
+    private Interactable interactableCoveredByCursor;
 
     public void OnInteract()
     {
-        CheckForInteractable();
+        if (interactableCoveredByCursor != null){
+            interactableCoveredByCursor.onInteract.Invoke();
+        }
     }
     public void OnUse()
     {
@@ -78,14 +88,19 @@ public class PlayerController : MonoBehaviour
     {
         //Check if there's an object in front of player
         RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxItemPickupDistance))
+        if (Physics.Raycast(camera.position, camera.forward, out hit, maxInteractDistance))
         {
-            print(hit.transform.gameObject.name);
-            if (hit.transform.GetComponent<Interactable>() == null)
-            {
+            // print(hit.transform.gameObject.name);
+            if (hit.transform.GetComponent<Interactable>() == null) {
+                if (interactableCoveredByCursor != null){
+                    interactableCoveredByCursor.Delight();
+                    interactableCoveredByCursor = null;
+                }
+
                 return;
             }
-            hit.transform.GetComponent<Interactable>().onInteract.Invoke();
+            interactableCoveredByCursor = hit.transform.GetComponent<Interactable>();
+            interactableCoveredByCursor.Highlight();
         }
     }
 
